@@ -25,12 +25,24 @@ const server = http.createServer((req, res) => {
 
     //task2
     //var message = req.message;
-    fs.writeFileSync("message.txt", "DUMMY");
+    const body = []; //chunks of data
+    req.on("data", chunk => {
+      console.log(chunk);
+      body.push(chunk);
+    });
+
+    req.on("end", () => {
+      const parsedBody = Buffer.concat(body).toString();
+      const message = parsedBody.split("=")[1];
+      fs.writeFileSync("message.txt", message);
+      res.statusCode = 302;
+      res.setHeader("Location", "/");
+      return res.end();
+    });
+
+    //fs.writeFileSync("message.txt", "DUMMY");
 
     //res.writeHead(302, { Location: "/" }); //writing header of res in one go
-    res.statusCode = 302;
-    res.setHeader("Location", "/");
-    return res.end();
   }
 
   res.setHeader("Content-Type", "text-html");
