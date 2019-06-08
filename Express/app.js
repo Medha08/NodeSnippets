@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
+const rootDir = require("./util/path");
 
 //express application
 const app = express(); //initializes new object  where expressjs framework manages lot of logic behind scene
@@ -10,6 +11,7 @@ const app = express(); //initializes new object  where expressjs framework manag
 //   console.log("This is one first MiddleWare");
 //   next(); //moves req to next middleware in line
 // });
+app.use(express.static(path.join(rootDir, "public")));
 app.use(shopRoutes);
 app.use("/admin", adminRoutes); //adminRoutes is a valid middleware function has to be above "/" route
 
@@ -30,8 +32,7 @@ app.use("/admin", adminRoutes); //adminRoutes is a valid middleware function has
 //   //res.send("<h1>Hi Express!</h1>"); we are again setting headers automaticallyls//send response //
 // });
 app.use((req, res, next) => {
-  res.status(404).sendFile(path.join(__dirname, "views", "404.html")); //can be chained like this it's just send has to be the last method //"/" default path in app.use()handles all incoming requests
+  res.status(404).sendFile(path.join(rootDir, "views", "404.html")); //can be chained like this it's just send has to be the last method //"/" default path in app.use()handles all incoming requests
 });
 
 app.listen(4200);
- 
